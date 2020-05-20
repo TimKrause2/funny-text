@@ -2,7 +2,7 @@ CC=g++
 
 rtext: rtext.o qstring.o parser.tab.o lexer.o
 
-rtext.o: rtext.cpp
+rtext.o: rtext.cpp parser.tab.hpp
 
 qstring.o: qstring.cpp
 
