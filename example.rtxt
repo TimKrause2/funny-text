@@ -1,0 +1,34 @@
+<The |color balloon |balloon_action.>
+< And here's another sentence.>
+<\nHe said, "Hello world.">
+<\nSunshine in Chinese:|Chinese_sunshine>
+<\nSunshine in German:Sonnenschein>
+<\nSunshine in Arabic:إشراق >
+<\nA sentence with more escape characters \<\>\n>
+<This\tis\ta\ttest.>
+
+color:
+1 <red>
+1 <green>
+1 <blue>
+;
+
+balloon_action:
+1 <popped>
+1 <rolled away in the wind>
+1 <floated up into the air>
+1 <|deflate_type deflated>
+;
+
+deflate_type:
+1 <quickly>
+1 <slowly>
+1 <instantaneously>
+1 <loudly>
+1 <quietly>
+;
+
+Chinese_sunshine:
+1 <阳光>
+1 <日照>
+;

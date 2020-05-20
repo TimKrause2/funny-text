@@ -1,0 +1,12 @@
+<|on_and_on.>
+
+on_and_on:
+1 <On>
+1 <On and on>
+3 <On |on_and_on_list and on>
+;
+
+on_and_on_list:
+1 <and on,>
+2 <|on_and_on_list and on,>
+;

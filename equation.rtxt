@@ -1,0 +1,136 @@
+<|expression equals |expression>
+
+greek_letter:
+1 <alpha>
+1 <beta>
+1 <gamma>
+1 <delta>
+1 <epsilon>
+1 <zeta>
+1 <eta>
+1 <theta>
+1 <iota>
+1 <kappa>
+1 <lambda>
+1 <mu>
+1 <nu>
+1 <xi>
+1 <omicron>
+1 <pi>
+1 <rho>
+1 <sigma>
+1 <tau>
+1 <upsilon>
+1 <phi>
+1 <chi>
+1 <psi>
+1 <omega>
+;
+
+digit:
+1 <one>
+1 <two>
+1 <three>
+1 <four>
+1 <five>
+1 <six>
+1 <seven>
+1 <eight>
+1 <nine>
+;
+
+english_letter:
+1 <ay>
+1 <bee>
+1 <see>
+1 <dee>
+1 <ee>
+1 <ef>
+1 <jee>
+1 <aych>
+1 <eye>
+1 <jay>
+1 <kay>
+1 <el>
+1 <em>
+1 <en>
+1 <oh>
+1 <pea>
+1 <queue>
+1 <are>
+1 <es>
+1 <tea>
+1 <you>
+1 <vee>
+1 <double you>
+1 <eks>
+1 <why>
+1 <zee>
+;
+
+variable:
+1 <|greek_letter>
+1 <|english_letter>
+1 <|greek_letter sub |variable_sub>
+1 <|english_letter sub |variable_sub>
+;
+
+variable_sub:
+1 <|greek_letter>
+1 <|english_letter>
+1 <|greek_letter |digit>
+1 <|english_letter |digit>
+;
+
+trig_function:
+1 <sine>
+1 <co-sine>
+1 <tangent>
+1 <cotanget>
+;
+
+expression:
+6 <|variable>
+1 <open parenthesis |term_sum closed parenthesis>
+1 <the sum from |expression to |expression of |expression>
+1 <the integral from |expression to |expression of |expression>
+1 <the absolute magnitude of |expression>
+2 <|trig_function |expression>
+2 <hyperbolic |trig_function |expression>
+3 <|expression to the exponent |expression>
+;
+
+term_sum:
+1 <|term |term_sum_list>
+;
+
+term_sum_list:
+1 <|sum_operator |term>
+3 <|term_sum_list |sum_operator |term>
+;
+
+sum_operator:
+1 <plus>
+1 <minus>
+;
+
+term:
+1 <|term_variable>
+1 <|term_variable_list>
+;
+
+term_variable:
+1 <|variable>
+1 <|variable to the exponent |digit>
+;
+
+term_variable_list:
+1 <|term_variable>
+1 <|term_variable_list |term_variable>
+;
+
+
+
+
+
+

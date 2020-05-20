@@ -1,0 +1,92 @@
+%{
+#include "parser.h"
+%}
+
+%define api.value.type {struct YYSTYPE}
+%token <INT> INT
+%token <STRING> STRING
+%define parse.error verbose
+%define parse.lac full
+%define api.pure full
+%locations
+
+%code top {
+    #include "qstring.h"
+    #include <stdio.h>
+}
+
+%code {
+    int yylex ( YYSTYPE * lvalp, YYLTYPE * llocp);
+    void yyerror(YYLTYPE* yyllocp, const char* msg);
+}
+
+%%
+
+input:
+    %empty
+    | input statement
+    ;
+    
+statement:
+    q_string
+    {
+        /* move the global temp string to the root string list */
+        AppendTempStringToGlobalString();
+    }
+    | STRING ':'
+    {
+        /* allocate a new list and add it to the global
+        q_string_list list */
+        AllocateGlobalStringList( $1 );
+    }
+    q_string_list ';'
+    ;
+
+q_string:
+    '<' q_string_content '>';
+
+q_string_content:
+    q_string_element
+    | q_string_content q_string_element
+    ;
+    
+q_string_element:
+    STRING
+    {
+        /* add a string copy to the global temp string*/
+        AppendCopyStringToGlobalTempString( $1 );
+    }
+    | '|' STRING
+    {
+        /* add a substitution reference to the global temp string*/
+        AppendRefStringToGlobalTempString( $2 );
+    }
+    ;
+
+q_string_list:
+    q_string_list_element
+    | q_string_list q_string_list_element
+    ;
+    
+q_string_list_element:
+    INT
+    {
+        /* allocate a q_string_list_element */
+        AllocateGlobalStringListElement( $1 );
+    }
+    q_string 
+    { 
+        /* move the global temp string to the end of the 
+        global q_string_list list. */ 
+        AppendTempStringToGlobalStringList();
+    } ;
+    
+%%
+
+void yyerror(YYLTYPE* yyllocp, const char* msg)
+{
+  fprintf(stderr, "[line %d:column %d]: %s\n",
+                  yyllocp->first_line, yyllocp->first_column, msg);
+
+}
+

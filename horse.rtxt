@@ -1,0 +1,36 @@
+<You can lead a horse to |water but you can't make him |drink.>
+
+water:
+1 <coffee>
+1 <bed>
+1 <hay>
+1 <the |field>
+;
+
+field:
+1 <field>
+1 <orchard>
+1 <barn>
+1 <house>
+1 <neighbours>
+1 <curch>
+1 <city>
+1 <town>
+1 <|festival_type festival>
+;
+
+festival_type:
+1 <music>
+1 <reading>
+1 <art>
+;
+
+drink:
+1 <drink>
+1 <fart>
+1 <burp>
+1 <count>
+1 <recite Shakespeare>
+1 <do math>
+1 <solve geometry>
+;
