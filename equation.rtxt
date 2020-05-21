@@ -1,4 +1,4 @@
-<|expression equals |expression>
+<|expression| equals |expression|>
 
 greek_letter:
 1 <alpha>
@@ -69,17 +69,17 @@ english_letter:
 ;
 
 variable:
-1 <|greek_letter>
-1 <|english_letter>
-1 <|greek_letter sub |variable_sub>
-1 <|english_letter sub |variable_sub>
+1 <|greek_letter|>
+1 <|english_letter|>
+1 <|greek_letter| sub |variable_sub|>
+1 <|english_letter| sub |variable_sub|>
 ;
 
 variable_sub:
-1 <|greek_letter>
-1 <|english_letter>
-1 <|greek_letter |digit>
-1 <|english_letter |digit>
+1 <|greek_letter|>
+1 <|english_letter|>
+1 <|greek_letter| |digit|>
+1 <|english_letter| |digit|>
 ;
 
 trig_function:
@@ -90,23 +90,23 @@ trig_function:
 ;
 
 expression:
-6 <|variable>
-1 <open parenthesis |term_sum closed parenthesis>
-1 <the sum from |expression to |expression of |expression>
-1 <the integral from |expression to |expression of |expression>
-1 <the absolute magnitude of |expression>
-2 <|trig_function |expression>
-2 <hyperbolic |trig_function |expression>
-3 <|expression to the exponent |expression>
+6 <|variable|>
+1 <open parenthesis |term_sum| closed parenthesis>
+1 <the sum from |expression| to |expression| of |expression|>
+1 <the integral from |expression| to |expression| of |expression|>
+1 <the absolute magnitude of |expression|>
+2 <|trig_function| |expression|>
+2 <hyperbolic |trig_function| |expression|>
+3 <|expression| to the exponent |expression|>
 ;
 
 term_sum:
-1 <|term |term_sum_list>
+1 <|term| |term_sum_list|>
 ;
 
 term_sum_list:
-1 <|sum_operator |term>
-3 <|term_sum_list |sum_operator |term>
+1 <|sum_operator| |term|>
+3 <|term_sum_list| |sum_operator| |term|>
 ;
 
 sum_operator:
@@ -115,18 +115,18 @@ sum_operator:
 ;
 
 term:
-1 <|term_variable>
-1 <|term_variable_list>
+1 <|term_variable|>
+1 <|term_variable_list|>
 ;
 
 term_variable:
-1 <|variable>
-1 <|variable to the exponent |digit>
+1 <|variable|>
+1 <|variable| to the exponent |digit|>
 ;
 
 term_variable_list:
-1 <|term_variable>
-1 <|term_variable_list |term_variable>
+1 <|term_variable|>
+1 <|term_variable_list| |term_variable|>
 ;
 
 

@@ -56,7 +56,7 @@ q_string_element:
         /* add a string copy to the global temp string*/
         AppendCopyStringToGlobalTempString( $1 );
     }
-    | '|' STRING
+    | '|' STRING '|'
     {
         /* add a substitution reference to the global temp string*/
         AppendRefStringToGlobalTempString( $2 );

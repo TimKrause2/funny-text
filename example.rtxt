@@ -1,7 +1,7 @@
-<The |color balloon |balloon_action.>
+<The |color| balloon |balloon_action|.>
 < And here's another sentence.>
 <\nHe said, "Hello world.">
-<\nSunshine in Chinese:|Chinese_sunshine>
+<\nSunshine in Chinese:|Chinese_sunshine|>
 <\nSunshine in German:Sonnenschein>
 <\nSunshine in Arabic:إشراق >
 <\nA sentence with more escape characters \<\>\n>
@@ -17,7 +17,7 @@ balloon_action:
 1 <popped>
 1 <rolled away in the wind>
 1 <floated up into the air>
-1 <|deflate_type deflated>
+1 <|deflate_type| deflated>
 ;
 
 deflate_type:

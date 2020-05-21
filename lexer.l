@@ -41,7 +41,8 @@ QUOTE_STR   [^<>\|\\]+
 <quote>\>   {yy_pop_state(); return '>';}
 <quote>{QUOTE_STR} {yylval->STRING = yytext; return STRING; }
 <quote>\|   {yy_push_state(quote_ref); return '|'; }
-<quote_ref>{REF_STR} {yylval->STRING = yytext; yy_pop_state(); return STRING; }
+<quote_ref>{REF_STR} {yylval->STRING = yytext; return STRING; }
+<quote_ref>\|       {yy_pop_state(); return '|'; }
 <quote>\\   {yy_push_state(quote_escape); }
 <quote_escape>{
 t       {yylval->STRING = '\t'; yy_pop_state(); return STRING; }
@@ -51,6 +52,7 @@ n       {yylval->STRING = '\n'; yy_pop_state(); return STRING; }
 \<      {yylval->STRING = '<'; yy_pop_state(); return STRING; }
 \>      {yylval->STRING = '>'; yy_pop_state(); return STRING; }
 .       {yylval->STRING = *yytext; yy_pop_state(); return STRING; }
+\n      {yy_pop_state();}
 }
 .           {}
 \n          {}
