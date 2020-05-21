@@ -4,8 +4,10 @@
 <\nSunshine in Chinese:|Chinese_sunshine|>
 <\nSunshine in German:Sonnenschein>
 <\nSunshine in Arabic:إشراق >
-<\nA sentence with more escape characters \<\>\n>
-<This\tis\ta\ttest.>
+<\nA sentence with more escape characters \<\>\|\\\n>
+<This\tis\ta\ttest.\n>
+<This is a sentence that is on more than one line\
+ but is still just a single sentence.\n>
 
 color:
 1 <red>
