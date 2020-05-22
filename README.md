@@ -34,8 +34,8 @@ To make 'rtext' you will need g++, make, flex 2.6.4 and bison 3.6 .
 
 To run 'rtext' on the command prompt type:
 
-$./rtext example.rtxt
+    $./rtext example.rtxt
 
 or
 
-$ cat example.rtxt | ./rtext
+    $cat example.rtxt | ./rtext
