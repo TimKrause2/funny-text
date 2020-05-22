@@ -6,27 +6,27 @@ Also demonstrates the use of flex and bison to create the lexical analyzer and p
 
 For an example of the grammar see one of the .rtxt files. The grammer consists of strings and substitution lists. Strings are delimited with '<' and '>', for example:
 
-<This is a string.>
+    <This is a string.>
 
 A string can have references to a substitution list. The subsititution reference is enclosed with the character '|', for example:
 
-<This is a string with a |reference_id|.>
+    <This is a string with a |reference_id|.>
 
 A substitution list is a list of strings. Each string in the list also has a weight. The higher the weight the more likely it is to be selected. The syntax for a substitution list is as follows:
 
-[ref_id]:
-[weight 0] string0
-[weight 1] string1
-...
-;
+    [ref_id]:
+    [weight 0] string0
+    [weight 1] string1
+    ...
+    ;
 
 For example, the 'reference_id' of the previous string example could have a substitution list like this:
 
-reference_id:
-1 <substitution>
-2 <replacement>
-3 <alternative>
-;
+    reference_id:
+    1 <substitution>
+    2 <replacement>
+    3 <alternative>
+    ;
 
 To make 'rtext' simply type make.
 
