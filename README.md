@@ -4,11 +4,33 @@ A recursive and random text substitution program. With the appropriate intput fi
 
 Also demonstrates the use of flex and bison to create the lexical analyzer and parser.
 
-For an example of the grammar see one of the .rtxt files.
+For an example of the grammar see one of the .rtxt files. The grammer consists of strings and substitution lists. Strings are delimited with '<' and '>', for example:
+
+<This is a string.>
+
+A string can have references to a substitution list. The subsititution reference is enclosed with the character '|', for example:
+
+<This is a string with a |reference_id|.>
+
+A substitution list is a list of strings. Each string in the list also has a weight. The higher the weight the more likely it is to be selected. The syntax for a substitution list is as follows:
+
+[ref_id]:
+[weight 0] string0
+[weight 1] string1
+...
+;
+
+For example, the 'reference_id' of the previous string example could have a substitution list like this:
+
+reference_id:
+1 <substitution>
+2 <replacement>
+3 <alternative>
+;
 
 To make 'rtext' simply type make.
 
-To make 'rtext' you will need g++, make, flex and bison.
+To make 'rtext' you will need g++, make, flex 2.6.4 and bison 3.6 .
 
 To run 'rtext' on the command prompt type:
 
