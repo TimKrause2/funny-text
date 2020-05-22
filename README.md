@@ -12,7 +12,7 @@ A string can have references to a substitution list. The subsititution reference
 
     <This is a string with a |reference_id|.>
 
-A substitution list is a list of strings. Each string in the list also has a weight. The higher the weight the more likely it is to be selected. The syntax for a substitution list is as follows:
+A substitution list is a list of strings. Each string in the list also has a integer weight. The higher the weight the more likely it is to be selected. The syntax for a substitution list is as follows:
 
     [ref_id]:
     [weight 0] string0
@@ -23,9 +23,9 @@ A substitution list is a list of strings. Each string in the list also has a wei
 For example, the 'reference_id' of the previous string example could have a substitution list like this:
 
     reference_id:
-    1 <substitution>
-    2 <replacement>
-    3 <alternative>
+    1 <substitution(this gets substituted 1/6th of the time)>
+    2 <replacement(this gets substituted 1/3rd of the time)>
+    3 <alternative(this gets substituted 1 half of the time)>
     ;
 
 To make 'rtext' simply type make.
