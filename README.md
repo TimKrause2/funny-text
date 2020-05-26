@@ -4,7 +4,9 @@ A recursive and random text substitution program. With the appropriate intput fi
 
 Also demonstrates the use of flex and bison to create the lexical analyzer and parser.
 
-For an example of the grammar see one of the .rtxt files. The grammer consists of strings and substitution lists. Strings are delimited with '<' and '>', for example:
+For an example of the grammar see one of the .rtxt files. The grammer consists of strings, substitution lists and includes.
+
+Strings are delimited with '<' and '>', for example:
 
     <This is a string.>
 
@@ -28,6 +30,14 @@ For example, the 'reference_id' of the previous string example could have a subs
     3 <alternative(this gets substituted 1 half of the time)>
     ;
 
+To include another file delimit it in '|', for example:
+
+    |include_this_file.rtxt|
+    
+Notice that it is the exact same syntax as a reference to a substitution list. If it's outside of a string then it's considered to be an include directive.
+    
+    
+    
 To make 'rtext' simply type make.
 
 To make 'rtext' you will need g++, make, flex 2.6.4 and bison 3.6 .
