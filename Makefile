@@ -2,7 +2,7 @@ CC=g++
 
 rtext: rtext.o qstring.o parser.tab.o lexer.o
 
-rtext.o: rtext.cpp parser.tab.hpp
+rtext.o: rtext.cpp parser.tab.hpp lexer.h
 
 qstring.o: qstring.cpp
 
@@ -13,6 +13,6 @@ parser.tab.o:parser.tab.cpp
 
 lexer.o:lexer.cpp
 
-lexer.cpp:lexer.l parser.tab.hpp
-	flex lexer.l
+lexer.cpp lexer.h:lexer.l parser.tab.hpp
+	flex --header-file=lexer.h lexer.l
 	mv lex.yy.c lexer.cpp
