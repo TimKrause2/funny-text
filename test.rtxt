@@ -1,8 +1,12 @@
+|test_include.rtxt|
 
-<A |颜色| balloon.>
+<A |颜色| balloon.\n>
 
 颜色:
 1 <red>
 1 <green>
 1 <blue>
 ;
+
+<Random choice test:|choice_test|.\n>
+<Random greek letter:|greek_letter|.\n>

@@ -1,3 +1,4 @@
+%require "3.6"
 %{
 #include "parser.h"
 %}
@@ -9,6 +10,11 @@
 %define parse.lac full
 %define api.pure full
 %locations
+%param { yyscan_t scanner }
+
+%code requires {
+    typedef void* yyscan_t;
+}
 
 %code top {
     #include "qstring.h"
@@ -16,8 +22,9 @@
 }
 
 %code {
-    int yylex ( YYSTYPE * lvalp, YYLTYPE * llocp);
-    void yyerror(YYLTYPE* yyllocp, const char* msg);
+    int yylex ( YYSTYPE * lvalp, YYLTYPE * llocp, yyscan_t scanner);
+    void yyerror(YYLTYPE* yyllocp, yyscan_t unused, const char* msg);
+    int parse_file(const char *filename, yyscan_t scanner);
 }
 
 %%
@@ -40,6 +47,12 @@ statement:
         AllocateGlobalStringList( $1 );
     }
     q_string_list ';'
+    | '|' STRING '|'
+    {
+        if(parse_file( $2.c_str(), scanner )==0){
+            YYABORT;
+        }
+    }
     ;
 
 q_string:
@@ -82,11 +95,4 @@ q_string_list_element:
     } ;
     
 %%
-
-void yyerror(YYLTYPE* yyllocp, const char* msg)
-{
-  fprintf(stderr, "[line %d:column %d]: %s\n",
-                  yyllocp->first_line, yyllocp->first_column, msg);
-
-}
 
