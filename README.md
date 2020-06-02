@@ -1,9 +1,11 @@
 # funny-text
 
+## Introduction
 A recursive and random text substitution program. With the appropriate intput file the resulting text can be funny. Especially when rendered with a text-to-speech application.
 
-Also demonstrates the use of flex and bison to create the lexical analyzer and parser.
+Also demonstrates the use of flex and bison to create the lexical analyzer and parser. Both of them are re-entrant which made handling include files trivial.
 
+## Grammar
 For an example of the grammar see one of the .rtxt files. The grammer consists of strings, substitution lists and includes.
 
 Strings are delimited with '<' and '>', for example:
@@ -36,16 +38,12 @@ To include another file delimit it in '|', for example:
     
 Notice that it is the exact same syntax as a reference to a substitution list. If it's outside of a string then it's considered to be an include directive.
     
-    
-    
+## Compilation
 To make 'rtext' simply type make.
 
 To make 'rtext' you will need g++, make, flex 2.6.4 and bison 3.6 .
 
+## Execution
 To run 'rtext' on the command prompt type:
 
     $./rtext example.rtxt
-
-or
-
-    $cat example.rtxt | ./rtext

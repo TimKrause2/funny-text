@@ -4,6 +4,7 @@
 <|expression| equals |expression|>
 
 digit:
+1 <zero>
 1 <one>
 1 <two>
 1 <three>
@@ -33,18 +34,18 @@ trig_function:
 1 <sine>
 1 <co-sine>
 1 <tangent>
-1 <cotanget>
+1 <co-tanget>
 ;
 
 expression:
 6 <|variable|>
-1 <open parenthesis |term_sum| closed parenthesis>
-1 <the sum from |expression| to |expression| of |expression|>
-1 <the integral from |expression| to |expression| of |expression|>
-1 <the absolute magnitude of |expression|>
-2 <|trig_function| |expression|>
-2 <hyperbolic |trig_function| |expression|>
-3 <|expression| to the exponent |expression|>
+1 <open parenthesis |term_sum| closed parenthesis.>
+1 <the sum from |expression| to |expression| of |expression|.>
+1 <the integral from |expression| to |expression| of |expression|.>
+1 <the absolute magnitude of |expression|.>
+2 <|trig_function| |expression|.>
+2 <hyperbolic |trig_function| |expression|.>
+3 <|expression| to the exponent |expression|.>
 ;
 
 term_sum:
@@ -73,7 +74,7 @@ term_variable:
 
 term_variable_list:
 1 <|term_variable|>
-1 <|term_variable_list| |term_variable|>
+1 <|term_variable_list| times |term_variable|>
 ;
 
 

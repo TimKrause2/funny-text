@@ -2,142 +2,87 @@
 #include <iostream>
 #include <random>
 #include <stdlib.h>
+#include <cstdio>
+#include <cstring>
 
-q_string_element::q_string_element(
-    q_string_element_type type,
-    std::string &data)
-{
-    q_string_element::type = type;
-    q_string_element::data = data;
-}
+q_string *g_root_string;
+q_string_list *g_substitution_list;
 
-q_string_list::q_string_list( std::string &name ){
-    q_string_list::name = name;
-}
-
-q_string_list_element::q_string_list_element(long weight){
-    q_string_list_element::weight = weight;
-}
-
-q_string g_temp_string;
-q_string g_root_string;
-std::list<q_string_list> g_substitution_list;
 std::random_device generator;
 
-void AppendTempStringToGlobalString( void )
-{
-    g_root_string.splice( g_root_string.end(), g_temp_string );
+q_string::q_string(char *data):
+data(data),
+next(NULL){}
+
+q_string_copy::q_string_copy(char *data):
+q_string(data){}
+
+void q_string_copy::render(void){
+    std::printf("%s",data);
+    if(next){
+        next->render();
+    }
 }
 
-void AllocateGlobalStringList( std::string &name )
-{
-     g_substitution_list.emplace_back( name );
+q_string_ref::q_string_ref(char *data):
+q_string(data){}
+
+void q_string_ref::render(void){
+    find_and_render();
+    if(next) next->render();
 }
 
-void AppendCopyStringToGlobalTempString( std::string &data )
-{
-    g_temp_string.emplace_back( QS_COPY, data );
-}
-
-void AppendRefStringToGlobalTempString( std::string &data )
-{
-    g_temp_string.emplace_back( QS_REFERENCE, data );
-}
-
-void AllocateGlobalStringListElement( long weight )
-{
-    g_substitution_list.back().elements.emplace_back( weight );
-}
-
-void AppendTempStringToGlobalStringList( void )
-{
-    g_substitution_list.back().elements.back().data.splice( g_substitution_list.back().elements.back().data.end(), g_temp_string );
-}
-
-void RenderString( q_string &str);
-
-void RenderReference(std::string &ref){
-    // find this reference in the substitution list
-    for(auto &list:g_substitution_list){
-        if(list.name.compare(ref)==0){
-            // found it
-            // calculate the total weight
+void q_string_ref::find_and_render(void){
+    q_string_list *list = g_substitution_list;
+    if(!list){
+        printf("No substitution lists!\n");
+        return;
+    }
+    do
+    {
+        if(strcmp(list->id,data)==0){
+            // found the list
+            // find the total weight
             long total_weight = 0;
-            for(auto &element:list.elements){
-                total_weight += element.weight;
+            q_string_list_element *element = list->elements;
+            while(element){
+                total_weight += element->weight;
+                element = element->next;
             }
+            
             // pick a random number
             std::uniform_int_distribution<int> distribution(0,total_weight-1);
             long x_pick = distribution(generator);
-            // find the element that 
+
+            // select the element
             long x_base = 0;
-            for(auto &element:list.elements){
-                if(x_pick>=x_base && x_pick<(x_base+element.weight)){
-                    RenderString( element.data );
+            element = list->elements;
+            do {
+                if(x_pick>=x_base && x_pick<(x_base+element->weight)){
+                    // render it
+                    element->str->render();
                     return;
                 }
-                x_base += element.weight;
-            }
+                x_base += element->weight;
+                element = element->next;
+            } while(element);
+            return;
         }
-    }
-    std::cout << "Couldn't find reference:" << ref << std::endl;
+        list = list->next;
+    }while(list);
+    printf("reference id not found for \"%s\"\n",data);
+    return;
 }
 
-void RenderString( q_string &str )
-{
-    for(auto &element:str){
-        switch(element.type){
-            case QS_COPY:
-                std::cout << element.data;
-                break;
-            case QS_REFERENCE:
-                RenderReference(element.data);
-                break;
-        }
-    }
-}
+q_string_list::q_string_list(char *id, q_string_list_element *elements):
+id(id),
+elements(elements){}
+
+q_string_list_element::q_string_list_element(long weight, q_string *str):
+weight(weight),
+str(str){}
 
 void RenderText( void )
 {
-    RenderString( g_root_string );
-    std::cout << std::endl;
+    g_root_string->render();
 }
-
-void DumpString( q_string str )
-{
-    for(auto &element:str){
-        switch(element.type){
-            case QS_COPY:
-                std::cout << element.data;
-                break;
-            case QS_REFERENCE:
-                std::cout << "|" << element.data;
-                break;
-        }
-    }
-}
-
-
-void DumpState( void )
-{
-    // print the contents of the root string
-    
-    // print the contents of the substitution list
-    std::cout << "Substitution list" << std::endl;
-    for(auto &list:g_substitution_list){
-        std::cout << "Name:" << list.name << std::endl;
-        for(auto &element:list.elements){
-            std::cout << "\tweight:" << element.weight;
-            std::cout << " data:";
-            DumpString(element.data);
-            std::cout << std::endl;
-        }
-    }
-}
-
-
-
-
-
-
-

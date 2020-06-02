@@ -13,7 +13,7 @@ field:
 1 <barn>
 1 <house>
 1 <neighbours>
-1 <curch>
+1 <church>
 1 <city>
 1 <town>
 1 <|festival_type| festival>
@@ -23,6 +23,7 @@ festival_type:
 1 <music>
 1 <reading>
 1 <art>
+1 <poetry>
 ;
 
 drink:
