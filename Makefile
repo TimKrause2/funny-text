@@ -1,3 +1,5 @@
+CPPFLAGS=-ggdb
+
 CC=g++
 
 rtext: rtext.o qstring.o parser.tab.o lexer.o

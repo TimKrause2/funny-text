@@ -76,11 +76,13 @@ void q_string_ref::find_and_render(void){
 
 q_string_list::q_string_list(char *id, q_string_list_element *elements):
 id(id),
+next(NULL),
 elements(elements){}
 
 q_string_list_element::q_string_list_element(long weight, q_string *str):
 weight(weight),
-str(str){}
+str(str),
+next(NULL){}
 
 void RenderText( void )
 {
