@@ -15,10 +15,14 @@
 %define parse.lac full
 %define api.pure full
 %locations
-%param { yyscan_t scanner }
+%parse-param { parse_state *ps }
+//%lex-param { yyscan_t* ps->scaninfo }
+// pass ____scaninfo for now and then
+// search-and-replace with sed in the Makefile
+%lex-param { ____scaninfo }
 
 %code requires {
-    typedef void* yyscan_t;
+    #include "parser.h"
 }
 
 %code top {
@@ -28,8 +32,8 @@
 
 %code {
     int yylex ( YYSTYPE * lvalp, YYLTYPE * llocp, yyscan_t scanner);
-    void yyerror(YYLTYPE* yyllocp, yyscan_t unused, const char* msg);
-    int parse_file(const char *filename, yyscan_t scanner);
+    void yyerror(YYLTYPE* yyllocp, parse_state *ps, const char* msg);
+    int parse_file(char *filename, parse_state *ps );
 }
 
 %%
@@ -51,7 +55,7 @@ statement:
     }
     | '|' STRING '|'
     {
-        if(parse_file( $2, scanner )==0){
+        if(parse_file( $2, ps )==0){
             YYERROR;
         }
         free($2);
@@ -72,7 +76,7 @@ q_string_content:
     
 q_string_element:
     STRING             { $$ = new q_string_copy( $1 ); }
-    | '|' STRING '|'   { $$ = new q_string_ref( $2 ); }
+    | '|' STRING '|'   { $$ = new q_string_ref( $2, ps, @2.first_line, @2.first_column ); }
     ;
 
 q_string_list:
@@ -88,4 +92,5 @@ q_string_list_element:
     INT q_string {$$ = new q_string_list_element($1,$2);}
     ;
 %%
-
+    
+    

@@ -1,91 +1,81 @@
 #include "qstring.h"
 #include "parser.tab.hpp"
+#include "parser.h"
 #include "lexer.h"
 #include <stdio.h>
 #include <string>
 
-class file_info {
-public:
-    std::string filename;
-    int prev_line;
-    file_info *prev;
-    file_info(const char *filename, int prev_line);
-    ~file_info(void);
-    static void print_include_hierarchy();
-    static file_info *head;
-};
+parse_state *parse_state::root = NULL;
 
-file_info *file_info::head = NULL;
-
-file_info::file_info(const char *filename, int prev_line){
-    prev = head;
-    head = this;
-    file_info::filename = filename;
-    file_info::prev_line = prev_line;
-}
-
-file_info::~file_info(void) {
-    head = prev;
-}
-
-void file_info::print_include_hierarchy(void)
+parse_state::parse_state(parse_state *included_from,
+                         char *filename,
+                         FILE *file ):
+included_from(included_from),
+includes(NULL),
+next(NULL),
+filename(strdup(filename))
 {
-    file_info *fi = head;
-    while(fi->prev){
-        fprintf(stderr, "included from \"%s\" at line number %d.\n",
-                fi->prev->filename.c_str(), fi->prev_line );
-        fi = fi->prev;
+    if(included_from)
+    {
+        // get the line number of the include
+        prev_lineno = yyget_lineno(included_from->scaninfo);
+        
+        // attach this to the includes list of the included_from
+        splice<parse_state>(&included_from->includes,this);
+    }else{
+        // attach this to the root list
+        splice<parse_state>(&root,this);
     }
+    
+    // initialize the scanner parse_state
+    yylex_init(&scaninfo);
+    yyrestart(file, scaninfo);
 }
 
-int parse_file(const char *filename, yyscan_t prev_scanner)
+void parse_state::print(int level){
+    printf("%*.s",level*2,"");
+    printf("\"%s\"\n",filename);
+    if(includes) includes->print(level+1);
+    if(next) next->print(level);
+}
+
+int parse_file(char *filename, parse_state *included_from)
 {
-    int prev_line=0;
-    file_info *prev_fi;
-    if(prev_scanner){
-        prev_line = yyget_lineno(prev_scanner);
-        prev_fi = (file_info*)yyget_extra(prev_scanner);
-    }
+    // open the file
     FILE *file = fopen(filename, "r");
     if(!file){
         perror("fopen");
-        if(prev_scanner){
+        if(included_from){
             fprintf(stderr, "Couldn't open include file:\"%s\"\n",
                     filename );
+            int prev_line = yyget_lineno(included_from->scaninfo);
             fprintf(stderr, "Include on line %d of file \"%s\"\n",
-                    prev_line, prev_fi->filename.c_str() );
+                    prev_line, included_from->filename );
         }else{
             fprintf(stderr, "Couldn't open source file:\"%s\"\n",
                     filename );
         }
         return 0;
     }
-    yyscan_t new_scanner;
-    file_info *fi = new file_info(filename, prev_line);
-    yylex_init_extra((void*)fi, &new_scanner);
-    yyrestart(file, new_scanner);
-    int parse_result = yyparse(new_scanner);
-    yylex_destroy(new_scanner);
-    delete fi;
+
+    parse_state *ps = new parse_state(included_from, filename, file);
+    
+    int r = yyparse(ps);
+    
     fclose(file);
-    if(parse_result==0){
+    
+    if(r==0)
         return 1;
-    }else{
+    else
         return 0;
-    }
 }
 
-void yyerror(YYLTYPE* yyllocp, yyscan_t scanner, const char* msg)
+void yyerror(YYLTYPE* yyllocp, parse_state *ps, const char* msg)
 {
-    file_info *fi = (file_info*)yyget_extra(scanner);
     fprintf(stderr, "\"%s\"[line %d:column %d]: %s\n",
-            fi->filename.c_str(),
+            ps->filename,
             yyllocp->first_line, yyllocp->first_column, msg);
-    file_info::print_include_hierarchy();
 }
-
-
-
 
 int main(int argc, char **argv)
 {
@@ -96,6 +86,8 @@ int main(int argc, char **argv)
     }
     
     if(parse_file(argv[1], NULL)){
+        VerifyText();
+        //parse_state::root->print(0);
         RenderText();
     }
     

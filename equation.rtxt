@@ -1,7 +1,7 @@
 |greek_letter.rtxt|
 |english_letter.rtxt|
 
-<|expression| equals |expression|>
+<|expression| equals |expression|.\n>
 
 digit:
 1 <zero>

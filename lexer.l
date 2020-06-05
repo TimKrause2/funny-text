@@ -8,7 +8,7 @@
 %option stack
 %option pointer
 %option reentrant
-%option noinput nounput 8bit nodefault
+%option noinput nounput 8bit
 
 %{
 #include "qstring.h"
@@ -44,7 +44,7 @@ PATH_STR    [^\|]+
 \<          {yy_push_state(quote,yyscanner); return '<';}
 \>          {return '>';}
 <quote>\>   {yy_pop_state(yyscanner); return '>';}
-<quote>\<   {return YYUNDEF;}
+<quote>\<   {return '<';}
 <quote>{QUOTE_STR} {yylval->str = strdup(yytext); return STRING; }
 <quote>\|   {yy_push_state(quote_ref,yyscanner); return '|'; }
 <quote_ref>{REF_STR} {yylval->str = strdup(yytext); return STRING; }

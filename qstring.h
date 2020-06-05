@@ -1,4 +1,5 @@
 #include <cstddef>
+#include "parser.h"
 
 class q_string
 {
@@ -8,6 +9,7 @@ public:
 public:
     q_string(char *data);
     virtual void render(void)=0;
+    virtual void verify(void)=0;
 };
 
 class q_string_copy : public q_string
@@ -15,13 +17,20 @@ class q_string_copy : public q_string
 public:
     q_string_copy(char *data);
     void render(void);
+    void verify(void);
 };
 
 class q_string_ref : public q_string
 {
+private:
+    parse_state *ps;
+    int first_line;
+    int first_column;
 public:
-    q_string_ref(char *data);
+    q_string_ref(char *data, parse_state *ps,
+        int first_line, int first_column );
     void render(void);
+    void verify(void);
     void find_and_render(void);
 };
 
@@ -60,4 +69,5 @@ template <class X> void splice(X **head, X *tail){
 extern q_string *g_root_string;
 extern q_string_list *g_substitution_list;
 
+void VerifyText( void );
 void RenderText( void );

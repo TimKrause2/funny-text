@@ -24,12 +24,45 @@ void q_string_copy::render(void){
     }
 }
 
-q_string_ref::q_string_ref(char *data):
-q_string(data){}
+void q_string_copy::verify(void){
+    if(next)
+        next->verify();
+}
+
+q_string_ref::q_string_ref(char *data, parse_state *ps, int first_line, int first_column):
+q_string(data),
+ps(ps),
+first_line(first_line),
+first_column(first_column){}
 
 void q_string_ref::render(void){
     find_and_render();
     if(next) next->render();
+}
+
+void q_string_ref::verify(void){
+    q_string_list *list = g_substitution_list;
+    if(!list){
+        printf("No substitution lists\n");
+        exit(EXIT_FAILURE);
+    }
+    bool found = false;
+    while(list){
+        if(strcmp(list->id,data)==0){
+            found = true;
+            break;
+        }
+        list = list->next;
+    }
+    if(!found){
+        printf("Reference not found |%s| in file \"%s\" [line:%d,column:%d]\n",
+               data,
+               ps->filename,
+               first_line, first_column
+              );
+        exit(EXIT_FAILURE);
+    }
+    if(next) next->verify();
 }
 
 void q_string_ref::find_and_render(void){
@@ -87,4 +120,19 @@ next(NULL){}
 void RenderText( void )
 {
     g_root_string->render();
+}
+
+void VerifyText( void )
+{
+    g_root_string->verify();
+    
+    q_string_list *list = g_substitution_list;
+    while(list){
+        q_string_list_element *element = list->elements;
+        while(element){
+            element->str->verify();
+            element = element->next;
+        }
+        list = list->next;
+    }
 }
