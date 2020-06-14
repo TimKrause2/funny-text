@@ -4,6 +4,9 @@
 #include "lexer.h"
 #include <stdio.h>
 #include <string>
+#include <stdlib.h>
+#include <new>
+#include <unistd.h>
 
 parse_state *parse_state::root = NULL;
 
@@ -15,6 +18,11 @@ includes(NULL),
 next(NULL),
 filename(strdup(filename))
 {
+    if(!filename){
+        printf("Ran out of memory.\n");
+        exit(EXIT_FAILURE);
+    }
+
     if(included_from)
     {
         // get the line number of the include
@@ -28,7 +36,16 @@ filename(strdup(filename))
     }
     
     // initialize the scanner parse_state
-    yylex_init(&scaninfo);
+    if(yylex_init(&scaninfo)){
+        if(errno==ENOMEM){
+            printf("Ran out of memory.\n");
+        }else if(errno==EINVAL){
+            perror("yylex_init");
+        }else{
+            printf("yylex_init unknown error.\n");
+        }
+        exit(EXIT_FAILURE);
+    }
     yyrestart(file, scaninfo);
 }
 
@@ -64,6 +81,8 @@ int parse_file(char *filename, parse_state *included_from)
     
     fclose(file);
     
+    yylex_destroy(ps->scaninfo);
+    
     if(r==0)
         return 1;
     else
@@ -75,21 +94,55 @@ void yyerror(YYLTYPE* yyllocp, parse_state *ps, const char* msg)
     fprintf(stderr, "\"%s\"[line %d:column %d]: %s\n",
             ps->filename,
             yyllocp->first_line, yyllocp->first_column, msg);
+    parse_state* ps_inc = ps;
+    while(ps_inc->included_from){
+        fprintf(stderr, "Included from \"%s\" on line %d.\n",
+                ps_inc->included_from->filename,
+                ps_inc->prev_lineno);
+        ps_inc=ps_inc->included_from;
+    }
+}
+
+void no_memory(void)
+{
+    printf("Ran out of memory! Exiting...\n");
+    exit(EXIT_FAILURE);
 }
 
 int main(int argc, char **argv)
 {
-    if(argc!=2){
-        printf("Incorrect number of arguments.\n");
-        printf("Usage: %s <input file>\n",argv[0]);
-        return 1;
+    std::set_new_handler(no_memory);
+
+    bool print_includes = false;
+    int getopt_out;
+    while((getopt_out=getopt(argc, argv, "i"))!=-1){
+        switch(getopt_out){
+            case 'i':
+                print_includes = true;
+                break;
+            case '?':
+                exit(EXIT_FAILURE);
+        }
     }
     
-    if(parse_file(argv[1], NULL)){
-        VerifyText();
-        //parse_state::root->print(0);
+    if(optind==argc){
+        printf("No input files.\n");
+        exit(EXIT_FAILURE);
+    }
+    int index = optind;
+    for(;index<argc;index++){
+        if(!parse_file(argv[index], NULL)){
+            printf("Error parsing file \"%s\"\n",argv[index]);
+            exit(EXIT_FAILURE);
+        }
+    }
+    VerifyText();
+    
+    if(print_includes){
+        parse_state::root->print(0);
+    }else{
         RenderText();
     }
     
-    return 0;
+    exit(EXIT_SUCCESS);
 }

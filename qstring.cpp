@@ -14,19 +14,32 @@ q_string::q_string(char *data):
 data(data),
 next(NULL){}
 
+void q_string::render_list(void)
+{
+    q_string *s = this;
+    while(s){
+        s->render();
+        s=s->next;
+    }
+}
+
+void q_string::verify_list(void)
+{
+    q_string *s = this;
+    while(s){
+        s->verify();
+        s=s->next;
+    }
+}
+
 q_string_copy::q_string_copy(char *data):
 q_string(data){}
 
 void q_string_copy::render(void){
     std::printf("%s",data);
-    if(next){
-        next->render();
-    }
 }
 
 void q_string_copy::verify(void){
-    if(next)
-        next->verify();
 }
 
 q_string_ref::q_string_ref(char *data, parse_state *ps, int first_line, int first_column):
@@ -37,7 +50,6 @@ first_column(first_column){}
 
 void q_string_ref::render(void){
     find_and_render();
-    if(next) next->render();
 }
 
 void q_string_ref::verify(void){
@@ -62,7 +74,6 @@ void q_string_ref::verify(void){
               );
         exit(EXIT_FAILURE);
     }
-    if(next) next->verify();
 }
 
 void q_string_ref::find_and_render(void){
@@ -93,7 +104,7 @@ void q_string_ref::find_and_render(void){
             do {
                 if(x_pick>=x_base && x_pick<(x_base+element->weight)){
                     // render it
-                    element->str->render();
+                    element->str->render_list();
                     return;
                 }
                 x_base += element->weight;
@@ -103,8 +114,6 @@ void q_string_ref::find_and_render(void){
         }
         list = list->next;
     }while(list);
-    printf("reference id not found for \"%s\"\n",data);
-    return;
 }
 
 q_string_list::q_string_list(char *id, q_string_list_element *elements):
@@ -119,18 +128,18 @@ next(NULL){}
 
 void RenderText( void )
 {
-    g_root_string->render();
+    g_root_string->render_list();
 }
 
 void VerifyText( void )
 {
-    g_root_string->verify();
+    g_root_string->verify_list();
     
     q_string_list *list = g_substitution_list;
     while(list){
         q_string_list_element *element = list->elements;
         while(element){
-            element->str->verify();
+            element->str->verify_list();
             element = element->next;
         }
         list = list->next;

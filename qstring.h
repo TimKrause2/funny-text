@@ -10,6 +10,8 @@ public:
     q_string(char *data);
     virtual void render(void)=0;
     virtual void verify(void)=0;
+    void render_list(void);
+    void verify_list(void);
 };
 
 class q_string_copy : public q_string

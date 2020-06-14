@@ -43,9 +43,10 @@ expression:
 1 <the sum from |expression| to |expression| of |expression|.>
 1 <the integral from |expression| to |expression| of |expression|.>
 1 <the absolute magnitude of |expression|.>
+2 <arc |trig_function| |expression|.>
 2 <|trig_function| |expression|.>
 2 <hyperbolic |trig_function| |expression|.>
-3 <|expression| to the exponent |expression|.>
+2 <|expression| to the exponent |expression|.>
 ;
 
 term_sum:
