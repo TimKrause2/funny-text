@@ -2,15 +2,15 @@ CC=g++
 
 rtext: rtext.o qstring.o parser.tab.o lexer.o
 
-rtext.o: rtext.cpp parser.tab.hpp lexer.h
+rtext.o: rtext.cpp parser.tab.hpp lexer.h parser.h qstring.h
 
-qstring.o: qstring.cpp
+qstring.o: qstring.cpp qstring.h
 
-parser.tab.cpp parser.tab.hpp: parser.ypp parser.h
+parser.tab.cpp parser.tab.hpp: parser.ypp
 	bison -d parser.ypp
 	sed -i 's/____scaninfo/ps->scaninfo/g' parser.tab.cpp
 	
-parser.tab.o:parser.tab.cpp
+parser.tab.o:parser.tab.cpp parser.h qstring.h
 
 lexer.o:lexer.cpp
 

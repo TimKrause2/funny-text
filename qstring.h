@@ -57,15 +57,10 @@ public:
 };
 
 template <class X> void splice(X **head, X *tail){
-    if(*head==NULL){
-       *head = tail;
-    }else{
-        X *x=*head;
-        while(x->next){
-            x = x->next;
-        }
-        x->next = tail;
+    while(*head){
+        head = &(*head)->next;
     }
+    *head = tail;
 }
 
 extern q_string *g_root_string;
